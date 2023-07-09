@@ -2,6 +2,7 @@ import { RawData, WebSocketServer } from 'ws';
 import { DataField } from "../constants/enums/DataField";
 import { IWSStateClient } from '../models/interfaces/IWSStateClient';
 import { CreateDataHandlers } from './create-data-handlers';
+import {WEB_SOCKET_CONNECTED, WEB_SOCKET_DISCONNECTED} from '../constants/constants';
 
 export class CreateHandlers {
     public wsClient: IWSStateClient;
@@ -20,7 +21,7 @@ export class CreateHandlers {
         wsClient.on('message', this.message);
         wsClient.on('close', this.disconnect);
 
-        wsClient.send('WebSocketServer ready to connect');
+        wsClient.send(WEB_SOCKET_CONNECTED);
     }
 
     private message = (webSocketData: RawData): void => {
@@ -38,7 +39,7 @@ export class CreateHandlers {
     };
 
     private disconnect = (): void => {
-        console.log('WebSocket client disconnect');
+        console.log(WEB_SOCKET_DISCONNECTED);
     };
 
     private validWebSocketData = (wsClientData: unknown): boolean => {

@@ -6,12 +6,12 @@ import {IAddShip} from '../models/interfaces/IAddShip';
 import { ICreateGame } from '../models/interfaces/ICreateGame';
 import { IResponseError } from '../models/interfaces/IResponseError';
 import { ICreateNewRoom } from '../models/interfaces/ICreateNewRoom';
-import { IResponseReg } from '../models/interfaces/IResponseReg';
 import { IDataUser } from '../models/interfaces/IDataUser';
 import { IUser } from '../models/interfaces/IUser';
 import { IResponseValidPlayer } from '../models/interfaces/IResponseValidPlayer';
 import { IWSStateClient } from '../models/interfaces/IWSStateClient';
 import {IAddUserToRoom} from "../models/interfaces/IAddUserToRoom";
+import {NOT_READY, STAGE_READY} from "../constants/constants";
 
 const usersData: IDataUser[] = [];
 
@@ -111,7 +111,6 @@ export class CreateResponseHandlers {
         rooms[indexRoomInBase]?.roomUsers.push({ index, name });
         const gameUsers = rooms[indexRoomInBase]?.roomUsers as IUser[];
 
-        // enemyUser.
         games.push({ stage: 'prepare', idGame, gameUsers });
         rooms.splice(indexRoomInBase, 1);
 
@@ -129,15 +128,11 @@ export class CreateResponseHandlers {
         const { gameId, indexPlayer, ships } = webSocketData;
         const indexGameInBase = games.findIndex((game) => game.idGame === gameId);
 
-        console.log('index', index);
-        console.log('indexPlayer', indexPlayer);
-
         if (idGame === gameId) {
             this.clientState.playerInfo.ships = ships;
             this.clientState.playerInfo.currentPlayer = indexPlayer;
 
-            console.log('stage', games[indexGameInBase]?.stage);
-            const isStageReady = games[indexGameInBase]?.stage === 'ready';
+            const isStageReady = games[indexGameInBase]?.stage === STAGE_READY;
 
             if (isStageReady) {
                 const dataObjectStartGameResponse = {
@@ -150,14 +145,14 @@ export class CreateResponseHandlers {
             }
 
             if (games[indexGameInBase]) {
-                (games[indexGameInBase] as IGame).stage = 'ready';
+                (games[indexGameInBase] as IGame).stage = STAGE_READY;
                 const dataObjectStartGameResponse = {
                     type: Type.START_GAME,
                     data: JSON.stringify({ ships, currentPlayerIndex: index }),
                     id: 0,
                 };
                 this.clientState.playerInfo.startPosition = JSON.stringify(dataObjectStartGameResponse);
-                return 'not ready';
+                return NOT_READY;
             }
         }
         return '';

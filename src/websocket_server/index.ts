@@ -1,6 +1,7 @@
 import { WebSocketServer } from 'ws';
 import { CreateHandlers } from './handlers/create-handlers';
 import { IWSStateClient } from './models/interfaces/IWSStateClient';
+import { SERVER_CLOSED } from './constants/constants';
 
 export class CreateWebSocketServer {
     public wss: WebSocketServer;
@@ -20,6 +21,6 @@ export class CreateWebSocketServer {
     }
 
     public serverClose = (): void => {
-        console.log('server closed');
+        console.log(SERVER_CLOSED);
     };
 }

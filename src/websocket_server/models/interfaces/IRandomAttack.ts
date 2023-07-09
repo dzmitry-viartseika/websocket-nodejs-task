@@ -1,4 +1,4 @@
-import {Type} from "../../constants/enums/Type";
+import { Type } from '../../constants/enums/Type';
 
 export interface IRandomAttack {
     type: typeof Type.RANDOM_ATTACK;

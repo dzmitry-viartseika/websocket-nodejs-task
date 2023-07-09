@@ -5,7 +5,7 @@ export interface IAddShip {
     type: typeof Type.ADD_SHIPS;
     data: {
         gameId: string;
-        ships: Ship[];
+        ships: IShip[];
         indexPlayer: string;
     };
     id: number;

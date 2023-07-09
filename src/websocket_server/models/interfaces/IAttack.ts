@@ -1,5 +1,5 @@
-import {Type} from '../../constants/enums/Type';
-import {Status} from '../../constants/enums/Status';
+import { Type } from '../../constants/enums/Type';
+import { Status } from '../../constants/enums/Status';
 
 export interface IRequestAttack {
     type: typeof Type.ATTACK;

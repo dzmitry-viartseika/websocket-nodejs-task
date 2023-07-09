@@ -6,9 +6,10 @@ import { ICreateNewRoom } from "../models/interfaces/ICreateNewRoom";
 import { IResponseValidPlayer } from "../models/interfaces/IResponseValidPlayer";
 import { IAddUserToRoom } from "../models/interfaces/IAddUserToRoom";
 import { IBasePacket } from "../models/interfaces/IBasePacket";
-import {IRequestReg, IResponseReg} from "../models/interfaces/IResponseReg";
+import {IRequestReg} from "../models/interfaces/IResponseReg";
 import { IWSStateClient } from "../models/interfaces/IWSStateClient";
 import { Type } from '../constants/enums/Type';
+import {NOT_READY, INVALID_DATA, WAIT_OPPONENT} from '../constants/constants';
 
 export class CreateDataHandlers {
     public clientState: IWSStateClient;
@@ -68,7 +69,7 @@ export class CreateDataHandlers {
                     return JSON.stringify({
                         type: Type.ADD_USER_TO_ROOM,
                         error: true,
-                        errorText: 'Cannot add user to own room, please wait opponent',
+                        errorText: WAIT_OPPONENT,
                     });
                 }
 
@@ -107,11 +108,11 @@ export class CreateDataHandlers {
                     return JSON.stringify({
                         type: Type.ADD_SHIPS,
                         error: true,
-                        errorText: 'Invalid data',
+                        errorText: INVALID_DATA,
                     });
                 }
 
-                if (ship === 'not ready') {
+                if (ship === NOT_READY) {
                     return;
                 } else if (ship) {
                     const clients = this.wsServer.clients as Set<IWSStateClient>;
@@ -146,7 +147,6 @@ export class CreateDataHandlers {
             data &&
             typeof data === 'object' &&
             'name' in data &&
-            typeof data.name === 'string' &&
             data.name.length >= 5 &&
             'password' in data &&
             typeof data.password === 'string' &&
@@ -167,7 +167,6 @@ export class CreateDataHandlers {
             data &&
             typeof data === 'object' &&
             'gameId' in data &&
-            typeof data.gameId === 'string' &&
             'ships' in data &&
             Array.isArray(data.ships) &&
             'indexPlayer' in data &&
@@ -176,6 +175,6 @@ export class CreateDataHandlers {
             return webSocketData as T;
         }
 
-        return { error: true, errorText: 'Invalid data' };
+        return { error: true, errorText: INVALID_DATA };
     };
 }
